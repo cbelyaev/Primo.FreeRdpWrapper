@@ -1,3 +1,5 @@
+set PATH_BACKUP=%PATH%
+
 call %~dp0\getvars.bat
 
 pushd .
@@ -13,3 +15,5 @@ call ms\do_win64a
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 popd
+
+set PATH=%PATH_BACKUP%

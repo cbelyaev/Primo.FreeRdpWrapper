@@ -1,3 +1,5 @@
+set PATH_BACKUP=%PATH%
+
 call "%~dp0\getvars.bat"
 pushd .
 cd %freeRdpDir%
@@ -15,9 +17,12 @@ cmd /c cmake . -B"./Build/x64" -G"Visual Studio 17 2022"^
 	-DWITH_MEDIA_FOUNDATION=OFF^
 
 rem build freerdp libs
-set Configuration=%1
-if [%Configuration%] == [] set Configuration=Debug
-echo ">>>>>>>>>>>>>>building freerdp configuration:<%Configuration%>"
-%msbuild% "%buildDir%\x64\FreeRDP.sln" /p:Configuration=%Configuration% /p:Platform=x64
+echo ">>>>>>>>>>>>>>building freerdp configuration:Debug"
+%msbuild% "%buildDir%\x64\FreeRDP.sln" /p:Configuration=Debug /p:Platform=x64
+
+echo ">>>>>>>>>>>>>>building freerdp configuration:Release"
+%msbuild% "%buildDir%\x64\FreeRDP.sln" /p:Configuration=Release /p:Platform=x64
 
 popd
+
+set PATH=%PATH_BACKUP%

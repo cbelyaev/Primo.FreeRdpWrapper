@@ -10,7 +10,7 @@
 winget install -e --id StrawberryPerl.StrawberryPerl
 ```
 
-#### Сборка FreeRDP и сборка OpenSSL (необходима для FreeRDP)
+#### Сборка FreeRDP, OpenSSL (необходима для FreeRDP) и FreeRdpWrapper
 
 * Шаги
 - Клонируйте [OpenSSL](https://github.com/openssl/openssl) в `..\Primo.FreeRdpWrapper.OpenSSL` и перейдите на тэг `OpenSSL_1_0_2u` 
@@ -18,20 +18,24 @@ winget install -e --id StrawberryPerl.StrawberryPerl
 - Соберите OpenSSL в `..\Primo.FreeRdpWrapper.OpenSSL-VC-64`.  (сценарий `ci\Scripts\buildOpenSsl`)
 - С помощью CMake сгенерируйте и соберите решения Visual Studio 2022.  (сценарий `ci\Scripts\BuildFreeRDP`)
 - Файл решения `FreeRDP.sln` будет находиться в каталоге `Build\x64\`.
+- Откройте `FreeRDP.sln` в Visual Studio 2022 и скомпилируйте библиотеку для конфигураций Release и Debug.
+- Откройте `Primo.FreeRdpWrapper/Primo.FreeRdpWrapper.sln` в Visual Studio 2022 и скомпилируйте библиотеку для конфигураций Release и Debug.
 
-* Сценарии
-- Простой
+* Простой сценарий
+- 
 ```
 cd ci/Scripts
-.\PrepareFreeRdpDev
+.\BuildAll
 ```
--- или подробный
+
+* Подробный сценарий
 ```
 cd ci/Scripts
 .\getOpenSsl
 .\buildOpenSsl
-.\buildFreeRDP Debug
+.\buildFreeRDP
+.\buildWrapper
 ```
 
-### Работа с Primo.FreeRdpWrapper
-* Откройте `Primo.FreeRdpWrapper/Primo.FreeRdpWrapper.sln`
+* Primo.FreeRdpWrapper.dll
+Целевые сборки находятся в каталогах `Output/bin/Release/x64` и `Output/bin/Debug/x64`.
