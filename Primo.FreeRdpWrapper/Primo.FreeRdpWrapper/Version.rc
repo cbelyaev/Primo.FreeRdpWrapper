@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION APP_VERSION_BINARY
- PRODUCTVERSION APP_VERSION_BINARY
+ FILEVERSION 1,1,1,0
+ PRODUCTVERSION 1,1,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Primo"
             VALUE "FileDescription", "Primo.FreeRdpWrapper"
-            VALUE "FileVersion", APP_VERSION
+            VALUE "FileVersion", "1,1,1,0"
             VALUE "InternalName", "Primo.FreeRdpWrapper.dll"
 			VALUE "LegalCopyright", "Copyright (C) Primo"
             VALUE "OriginalFilename", "Primo.FreeRdpWrapper.dll"
             VALUE "ProductName", "Primo"
-            VALUE "ProductVersion", APP_VERSION
+            VALUE "ProductVersion", "1,1,1,0"
         END
     END
     BLOCK "VarFileInfo"

@@ -53,6 +53,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
+    <CppOutDir>$(SolutionDir)\..\Output\bin</CppOutDir>
     <OutDir>$(CppOutDir)\$(Configuration)\$(PlatformTarget)\</OutDir>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
     <SourcePath>$(SourcePath)</SourcePath>
@@ -78,9 +79,6 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
-    <ResourceCompile>
-      <PreprocessorDefinitions>APP_VERSION=\"$(AppVersion)\";APP_VERSION_BINARY=$(AppVersion.Replace('.', ','));%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -107,9 +105,6 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
-    <ResourceCompile>
-      <PreprocessorDefinitions>APP_VERSION=\"$(AppVersion)\";APP_VERSION_BINARY=$(AppVersion.Replace('.', ','));%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FreeRdpWrapper.h" />
