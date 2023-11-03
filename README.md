@@ -40,8 +40,6 @@ cd Primo.FreeRdpWrapper
 
 #### Подробный сценарий
 
-* Необходима Visual Studio 2022 установленная `C:\Program Files` с поддержкой разработки на C++, включая Git.
-
 ```
 git clone https://github.com/cbelyaev/Primo.FreeRdpWrapper.git
 cd Primo.FreeRdpWrapper
