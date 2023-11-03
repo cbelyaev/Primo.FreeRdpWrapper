@@ -1,41 +1,87 @@
-## Вариант FreeRDP для Primo RPA
+## FreeRDP Wrapper для Primo RPA
 
-### Инструкция по сборке
-* Необходима Visual Studio 2022 установленная `C:\Program Files` с поддержкой разработки на C++, включая C++ CMake tools и Git.  
+### Сборка для Windows- простой сценарий
 
-#### 
-* Установите [StrawberryPerl](http://strawberryperl.com).  Убедитесь что команда `perl` доступна из переменной окружения PATH.
-  На Windows 10/11 можно использовать:
+* Необходима Visual Studio 2022 установленная `C:\Program Files` с поддержкой разработки на C++, включая Git.
+
 ```
-winget install -e --id StrawberryPerl.StrawberryPerl
-```
-
-#### Сборка FreeRDP, OpenSSL (необходима для FreeRDP) и FreeRdpWrapper
-
-##### Шаги
-- Клонируйте [OpenSSL](https://github.com/openssl/openssl) в `..\Primo.FreeRdpWrapper.OpenSSL` и перейдите на тэг `OpenSSL_1_0_2u` 
-(сценарий `ci\Scripts\getOpenSsl.bat`)
-- Соберите OpenSSL в `..\Primo.FreeRdpWrapper.OpenSSL-VC-64`.  (сценарий `ci\Scripts\buildOpenSsl`)
-- С помощью CMake сгенерируйте и соберите решения Visual Studio 2022.  (сценарий `ci\Scripts\BuildFreeRDP`)
-- Файл решения `FreeRDP.sln` будет находиться в каталоге `Build\x64\`.
-- Откройте `FreeRDP.sln` в Visual Studio 2022 и скомпилируйте библиотеку для конфигураций Release и Debug.
-- Откройте `Primo.FreeRdpWrapper/Primo.FreeRdpWrapper.sln` в Visual Studio 2022 и скомпилируйте библиотеку для конфигураций Release и Debug.
-
-##### Простой сценарий
-- 
-```
-cd ci/Scripts
-.\BuildAll
+git clone https://github.com/cbelyaev/Primo.FreeRdpWrapper.git
+cd Primo.FreeRdpWrapper
+rebuild.bat
 ```
 
-##### Подробный сценарий
+#### Подробный сценарий
+
+* Необходима Visual Studio 2022 установленная `C:\Program Files` с поддержкой разработки на C++, включая Git.
+
 ```
-cd ci/Scripts
-.\getOpenSsl
-.\buildOpenSsl
-.\buildFreeRDP
-.\buildWrapper
+git clone https://github.com/cbelyaev/Primo.FreeRdpWrapper.git
+cd Primo.FreeRdpWrapper
+
+git clone  --depth 1 --branch 2023.10.19 https://github.com/Microsoft/vcpkg.git
+.\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+
+.\vcpkg\vcpkg.exe install freerdp:x64-windows-static-release
+
+msbuild "Primo.FreeRdpWrapper.sln" /p:Configuration=Debug /p:Platform=x64
+msbuild "Primo.FreeRdpWrapper.sln" /p:Configuration=Release /p:Platform=x64
 ```
 
-##### Primo.FreeRdpWrapper.dll
-Целевые сборки находятся в каталогах `Output/bin/Release/x64` и `Output/bin/Debug/x64`.
+#### Primo.FreeRdpWrapper.dll
+Целевые сборки находятся в каталогах `x64/Release` и `x64/Debug`.
+
+### Сборка для Linux - простой сценарий
+
+```
+git clone https://github.com/cbelyaev/Primo.FreeRdpWrapper.git
+cd Primo.FreeRdpWrapper
+./rebuild.sh
+```
+
+#### Подробный сценарий
+
+* Необходима Visual Studio 2022 установленная `C:\Program Files` с поддержкой разработки на C++, включая Git.
+
+```
+git clone https://github.com/cbelyaev/Primo.FreeRdpWrapper.git
+cd Primo.FreeRdpWrapper
+
+git clone  --depth 1 --branch 2023.10.19 https://github.com/Microsoft/vcpkg.git
+./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+cp x64-linux-static-release.cmake ./vcpkg/triplets/community
+./vcpkg/vcpkg install freerdp:x64-linux-static-release
+
+mkdir -p ./x64/Debug ./x64/Release
+gcc \
+    -DDEBUG \
+    -shared \
+    -o ./x64/Debug/Primo.FreeRdpWrapper.so \
+    -fPIC \
+    -I./vcpkg/installed/x64-linux-static-release/include \
+    -Wall \
+    Logging.c \
+    FreeRdpWrapper.c \
+    ./vcpkg/installed/x64-linux-static-release/lib/libfreerdp2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libfreerdp-client2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libwinpr2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libssl.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libcrypto.a
+gcc \
+    -shared \
+    -o ./x64/Release/Primo.FreeRdpWrapper.so \
+    -fPIC \
+    -I./vcpkg/installed/x64-linux-static-release/include \
+    -Wall \
+    Logging.c \
+    FreeRdpWrapper.c \
+    ./vcpkg/installed/x64-linux-static-release/lib/libfreerdp2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libfreerdp-client2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libwinpr2.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libssl.a \
+    ./vcpkg/installed/x64-linux-static-release/lib/libcrypto.a
+strip ./x64/Release/Primo.FreeRdpWrapper.so
+```
+
+#### Primo.FreeRdpWrapper.so
+Целевые сборки находятся в каталогах `x64/Release` и `x64/Debug`.
