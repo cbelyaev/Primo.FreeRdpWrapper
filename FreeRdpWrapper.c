@@ -19,15 +19,27 @@ void on_stopped(wrapper_context* wcontext)
 	WCHAR* wszMsgBuff;
 	rdpContext* context = (rdpContext*)wcontext;
 	const UINT32 rdpError = freerdp_get_last_error(context);
-	const char* rdpErrorString = freerdp_get_last_error_string(rdpError);
-	sprintf_s(szMsgBuff, _countof(szMsgBuff), "RDP error 0x%08x: %s", rdpError, rdpErrorString);
+	DWORD level;
+	const char* rdpErrorString;
+	if (rdpError == FREERDP_ERROR_SUCCESS)
+	{
+		rdpErrorString = "Disconnected normally";
+		sprintf_s(szMsgBuff, _countof(szMsgBuff), rdpErrorString);
+		level = WLOG_INFO;
+	}
+	else
+	{
+		rdpErrorString = freerdp_get_last_error_string(rdpError);
+		sprintf_s(szMsgBuff, _countof(szMsgBuff), "RDP error 0x%08x: %s", rdpError, rdpErrorString);
+		level = WLOG_ERROR;
+	}
+
 	ConvertToUnicode(CP_UTF8, 0, szMsgBuff, -1, &wszMsgBuff, 0);
-	Log(WLOG_ERROR, (wchar_t*)wszMsgBuff);
+	Log(level, (wchar_t*)wszMsgBuff);
 	free(wszMsgBuff);
 
 	if (wcontext->OnStoppedPtr)
 	{
-		//instanceData->OnStoppedPtr
 		pOnStopped callback = wcontext->OnStoppedPtr;
 		if (!callback)
 		{
@@ -210,6 +222,23 @@ DWORD release_all(wrapper_context* wcontext)
 	return ERROR_SUCCESS;
 }
 
+void register_thread_scope(char *hostName, char *userName)
+{
+	if (hostName == NULL || userName == NULL)
+	{
+		return;
+	}
+
+	size_t scopeLen = strlen(hostName) + strlen(userName) + 14;
+	char *scope = calloc(1, scopeLen);
+	if (scope)
+	{
+		sprintf_s(scope, scopeLen, "host=%s, user=%s", hostName, userName);
+		RegisterCurrentThreadScope(scope);
+		free(scope);
+	}
+}
+
 // Freerdp async transport implementation
 // Was removed from freerdp core (https://github.com/FreeRDP/FreeRDP/pull/4815), and remains
 // only on freerdp clients Seems to still needed for Windows7 disconnected session
@@ -226,20 +255,7 @@ DWORD WINAPI transport_thread(LPVOID pData)
 	}
 
 	rdpContext* context = (rdpContext*)wcontext;
-	char *hostName = context->instance->settings->ServerHostname;
-	char *userName = context->instance->settings->Username;
-	if (hostName != NULL && userName != NULL)
-	{
-		size_t scopeLen = strlen(hostName) + strlen(userName) + 2;
-		char *scope = calloc(1, scopeLen);
-		if (scope)
-		{
-			sprintf_s(scope, scopeLen, "%s/%s", hostName, userName);
-			RegisterCurrentThreadScope(scope);
-			free(scope);
-		}
-	}
-
+	register_thread_scope(context->instance->settings->ServerHostname, context->instance->settings->Username);
 	handles[0] = wcontext->transportStopEvent;
 
 	while (1)
