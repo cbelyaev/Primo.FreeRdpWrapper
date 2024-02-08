@@ -2,8 +2,8 @@ LANGUAGE 0x09, 0x01
 #pragma code_page(1252)
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,0,0,0
- PRODUCTVERSION 2,0,0,0
+ FILEVERSION 2,0,1,0
+ PRODUCTVERSION 2,0,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -20,12 +20,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Primo"
             VALUE "FileDescription", "Primo.FreeRdpWrapper"
-            VALUE "FileVersion", "2,0,0,0"
+            VALUE "FileVersion", "2,0,1,0"
             VALUE "InternalName", "Primo.FreeRdpWrapper.dll"
             VALUE "LegalCopyright", "Copyright (C) Primo"
             VALUE "OriginalFilename", "Primo.FreeRdpWrapper.dll"
             VALUE "ProductName", "Primo"
-            VALUE "ProductVersion", "2,0,0,0"
+            VALUE "ProductVersion", "2,0,1,0"
         END
     END
     BLOCK "VarFileInfo"
