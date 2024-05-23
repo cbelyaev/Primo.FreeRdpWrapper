@@ -14,9 +14,7 @@ BOOL wLog_Message(const wLogMessage* msg)
 		return FALSE;
 	}
 
-	WCHAR *wbuffer = NULL;
-	ConvertToUnicode(CP_UTF8, 0, msg->TextString, -1, &wbuffer, 0);
-
+	WCHAR *wbuffer = ConvertUtf8ToWCharAlloc(msg->TextString, NULL);
 	_clientLogCallback(msg->PrefixString, msg->Level, wbuffer);
 	if (wbuffer != NULL)
 	{

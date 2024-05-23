@@ -17,6 +17,7 @@
     <RootNamespace>PrimoFreeRdpWrapper</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Primo.FreeRdpWrapper</ProjectName>
+    <IntDir>$(SolutionDir)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -56,7 +57,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>comsuppw.lib;comsupp.lib;freerdp-client2.lib;freerdp2.lib;winpr2.lib;libcrypto.lib;libssl.lib;Dbghelp.lib;Secur32.lib;ntdsapi.lib;Rpcrt4.lib;Crypt32.lib;ncrypt.lib;Userenv.lib;ws2_32.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comsuppw.lib;comsupp.lib;freerdp-client3.lib;freerdp3.lib;winpr3.lib;libcrypto.lib;libssl.lib;cjson.lib;Dbghelp.lib;Secur32.lib;ntdsapi.lib;Rpcrt4.lib;Crypt32.lib;ncrypt.lib;Userenv.lib;ws2_32.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\vcpkg\installed\x64-windows-static-release\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;msvcrt.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -81,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>comsuppw.lib;comsupp.lib;freerdp-client2.lib;freerdp2.lib;winpr2.lib;libcrypto.lib;libssl.lib;Dbghelp.lib;Secur32.lib;ntdsapi.lib;Rpcrt4.lib;Crypt32.lib;ncrypt.lib;Userenv.lib;ws2_32.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comsuppw.lib;comsupp.lib;freerdp-client3.lib;freerdp3.lib;winpr3.lib;libcrypto.lib;libssl.lib;cjson.lib;Dbghelp.lib;Secur32.lib;ntdsapi.lib;Rpcrt4.lib;Crypt32.lib;ncrypt.lib;Userenv.lib;ws2_32.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\vcpkg\installed\x64-windows-static-release\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;msvcrt.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
