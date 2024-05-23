@@ -189,7 +189,7 @@ void prepare_rdp_context(rdpContext* context, const ConnectOptions* rdpOptions)
         freerdp_settings_set_uint32(context->settings, FreeRDP_ColorDepth, rdpOptions->Depth);
 	}
 
-    freerdp_settings_set_bool(context->settings, FreeRDP_AllowFontSmoothing, rdpOptions->FontSmoothing);
+  freerdp_settings_set_bool(context->settings, FreeRDP_AllowFontSmoothing, rdpOptions->FontSmoothing);
 
 	if (rdpOptions->OnImageUpdatedPtr)
 	{
@@ -213,6 +213,11 @@ DWORD release_all(wrapper_context* wcontext)
 	}
 
 	freerdp* instance = ((rdpContext*)wcontext)->instance;
+	if (instance->context->cache != NULL)
+	{
+		cache_free(instance->context->cache);
+	}
+
 	freerdp_disconnect(instance);
 	CloseHandle(wcontext->transportStopEvent);
 	wcontext->transportStopEvent = NULL;
@@ -256,6 +261,13 @@ DWORD WINAPI transport_thread(LPVOID pData)
 
 	rdpContext* context = (rdpContext*)wcontext;
 	register_thread_scope(freerdp_settings_get_server_name(context->settings), freerdp_settings_get_string(context->settings, FreeRDP_Username));
+
+	if (wcontext->OnImageUpdatedPtr == NULL)
+	{
+		// disable rendering
+		context->cache = cache_new(context->instance->settings);
+	}
+
 	handles[0] = wcontext->transportStopEvent;
 
 	while (1)
