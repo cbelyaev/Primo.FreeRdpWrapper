@@ -12,7 +12,7 @@ for /f "usebackq delims=" %%i in (`%vswhere% -prerelease -latest -property insta
 )
 call "%vsdir%\Common7\Tools\vsdevcmd.bat"
 
-git clone  --depth 1 --branch 2024.04.26 https://github.com/Microsoft/vcpkg.git
+git clone  --depth 1 --branch 2024.07.12 https://github.com/Microsoft/vcpkg.git
 call .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 .\vcpkg\vcpkg.exe install freerdp:x64-windows-static-release
 
