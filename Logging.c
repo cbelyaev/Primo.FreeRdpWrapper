@@ -7,17 +7,17 @@ static pLogCallback _clientLogCallback = NULL;
 static wLogCallbacks _wlogCallbacks = { 0 };
 static char _defaultCategory[] = "Primo.FreeRdpWrapper";
 
-BOOL wLog_Message(const wLogMessage* msg)
+static BOOL wLog_Message(const wLogMessage* msg)
 {
-	if (!_clientLogCallback)
+	if (_clientLogCallback == NULL)
 	{
 		return FALSE;
 	}
 
 	WCHAR *wbuffer = ConvertUtf8ToWCharAlloc(msg->TextString, NULL);
-	_clientLogCallback(msg->PrefixString, msg->Level, wbuffer);
 	if (wbuffer != NULL)
 	{
+		_clientLogCallback(msg->PrefixString, msg->Level, wbuffer);
 		free(wbuffer);
 	}
 
@@ -29,7 +29,7 @@ HRESULT InitializeLogging(pLogCallback logCallback, pRegisterThreadScopeCallback
 	_clientLogCallback = logCallback;
 	_registerThreadScopeCallback = registerThreadScopeCallback;
 
-	if (!_clientLogCallback)
+	if (_clientLogCallback == NULL)
 	{
 		return S_OK;
 	}
@@ -42,7 +42,7 @@ HRESULT InitializeLogging(pLogCallback logCallback, pRegisterThreadScopeCallback
 	wLogLayout* layout = WLog_GetLogLayout(log);
 	WLog_Layout_SetPrefixFormat(log, layout, "%mn");
 #ifdef _DEBUG
-	WLog_SetLogLevel(log, WLOG_INFO);
+	WLog_SetLogLevel(log, WLOG_DEBUG);
 #else
 	WLog_SetLogLevel(log, WLOG_ERROR);
 #endif
@@ -59,7 +59,7 @@ HRESULT InitializeLogging(pLogCallback logCallback, pRegisterThreadScopeCallback
 
 void Log(DWORD level, const wchar_t* fmt, ...)
 {
-	if (!_clientLogCallback)
+	if (_clientLogCallback == NULL)
 	{
 		return;
 	}
@@ -74,7 +74,7 @@ void Log(DWORD level, const wchar_t* fmt, ...)
 
 void RegisterCurrentThreadScope(char* scope)
 {
-	if (!_registerThreadScopeCallback)
+	if (_registerThreadScopeCallback == NULL)
 	{
 		return;
 	}

@@ -38,7 +38,7 @@ extern "C"
 #ifdef _WIN32
 	__declspec(dllexport)
 #endif
-	DWORD RdpStart(ConnectOptions* rdpOptions, HANDLE* wcontextPtr);
+	DWORD RdpStart(const ConnectOptions* rdpOptions, HANDLE* wcontextPtr);
 
 #ifdef _WIN32
 	__declspec(dllexport)
