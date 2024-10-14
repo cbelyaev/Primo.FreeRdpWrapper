@@ -157,11 +157,8 @@ static BOOL on_post_connect(freerdp* instance)
 		return FALSE;
 	}
 
-	if (!freerdp_settings_get_bool(instance->context->settings, FreeRDP_DeactivateClientDecoding))
-	{
-		instance->context->update->BeginPaint = on_begin_paint;
-		instance->context->update->EndPaint = on_end_paint;
-	}
+	instance->context->update->BeginPaint = on_begin_paint;
+	instance->context->update->EndPaint = on_end_paint;
 
 	return TRUE;
 }
@@ -244,17 +241,10 @@ static void prepare_rdp_context(rdpContext* context, const ConnectOptions* rdpOp
 	context->instance->LogonErrorInfo = on_logon_error_info;
 #endif
 
-	if (rdpOptions->OnImageUpdatedPtr)
-	{
-		((wrapper_context*)context)->OnImageUpdatedPtr = rdpOptions->OnImageUpdatedPtr;
-	    freerdp_settings_set_bool(context->settings, FreeRDP_SoftwareGdi, TRUE);
-	    freerdp_settings_set_bool(context->settings, FreeRDP_BitmapCacheEnabled, TRUE);
-		freerdp_settings_set_bool(context->settings, FreeRDP_AllowFontSmoothing, rdpOptions->FontSmoothing);
-	}
-	else
-	{
-	    freerdp_settings_set_bool(context->settings, FreeRDP_DeactivateClientDecoding, TRUE);
-	}
+	((wrapper_context*)context)->OnImageUpdatedPtr = rdpOptions->OnImageUpdatedPtr;
+    freerdp_settings_set_bool(context->settings, FreeRDP_SoftwareGdi, TRUE);
+    freerdp_settings_set_bool(context->settings, FreeRDP_BitmapCacheEnabled, TRUE);
+	freerdp_settings_set_bool(context->settings, FreeRDP_AllowFontSmoothing, rdpOptions->FontSmoothing);
 
 	if (rdpOptions->OnStoppedPtr)
 	{
@@ -271,9 +261,13 @@ static DWORD release_all(wrapper_context* wcontext)
 	}
 
 	freerdp* instance = ((rdpContext*)wcontext)->instance;
-	freerdp_disconnect(instance);
-	CloseHandle(wcontext->transportStopEvent);
-	wcontext->transportStopEvent = NULL;
+	if (wcontext->transportStopEvent != NULL)
+	{
+		freerdp_disconnect(instance);
+		CloseHandle(wcontext->transportStopEvent);
+		wcontext->transportStopEvent = NULL;
+	}
+
 	freerdp_context_free(instance);
 	freerdp_free(instance);
 
@@ -411,6 +405,11 @@ DWORD RdpStop(HANDLE wcontextPtr)
 
 	wcontext->OnStoppedPtr = NULL; // to prevent from calling after dispose
 	wcontext->OnImageUpdatedPtr = NULL; // to prevent from calling after dispose
+
+	if (wcontext->transportStopEvent == NULL)
+	{
+		return NO_ERROR;
+	}
 
 	DWORD result = 0;
 	if (!SetEvent(wcontext->transportStopEvent))

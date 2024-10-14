@@ -2,7 +2,7 @@
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
 1 VERSIONINFO
- FILEVERSION 2,1,0,0
+ FILEVERSION 2,1,2,0
  PRODUCTVERSION 2,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -20,7 +20,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Primo"
             VALUE "FileDescription", "Primo.FreeRdpWrapper"
-            VALUE "FileVersion", "2,1,0,0"
+            VALUE "FileVersion", "2,1,2,0"
             VALUE "InternalName", "Primo.FreeRdpWrapper.dll"
             VALUE "LegalCopyright", "Copyright (C) Primo"
             VALUE "OriginalFilename", "Primo.FreeRdpWrapper.dll"
