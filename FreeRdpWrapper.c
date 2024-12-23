@@ -215,9 +215,18 @@ static void prepare_rdp_context(rdpContext* context, const ConnectOptions* rdpOp
 	}
 
     freerdp_settings_set_uint32(context->settings, FreeRDP_ProxyType, PROXY_TYPE_IGNORE);
-    freerdp_settings_set_uint32(context->settings, FreeRDP_TcpAckTimeout, 60000);
     freerdp_settings_set_bool(context->settings, FreeRDP_LocalConnection, TRUE);
     freerdp_settings_set_bool(context->settings, FreeRDP_IgnoreCertificate, TRUE);
+	
+	freerdp_settings_set_bool(context->settings, FreeRDP_AutoReconnectionEnabled, rdpOptions->AutoReconnectionEnabled);
+	
+	freerdp_settings_set_uint32(context->settings, FreeRDP_AutoReconnectMaxRetries, rdpOptions->AutoReconnectMaxRetries);
+	freerdp_settings_set_uint32(context->settings, FreeRDP_TcpAckTimeout, rdpOptions->TcpAckTimeout);
+	freerdp_settings_set_uint32(context->settings, FreeRDP_TcpConnectTimeout, rdpOptions->TcpConnectTimeout);
+	
+
+
+
 
 	if (rdpOptions->Width > 0)
 	{

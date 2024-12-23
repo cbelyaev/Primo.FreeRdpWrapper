@@ -28,6 +28,11 @@ typedef struct
 	int32_t Port;
 	pOnImageUpdated OnImageUpdatedPtr;
 	pOnStopped OnStoppedPtr;
+	int32_t AutoReconnectionEnabled;
+	int32_t AutoReconnectMaxRetries;
+	int32_t TcpAckTimeout;
+	int32_t TcpConnectTimeout;
+
 } ConnectOptions;
 
 #ifdef __cplusplus
