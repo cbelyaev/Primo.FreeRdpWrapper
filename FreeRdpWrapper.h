@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Logging.h"
-
 typedef struct
 {
 	BYTE* PixelArray;
@@ -32,7 +30,6 @@ typedef struct
 	int32_t AutoReconnectMaxRetries;
 	int32_t TcpAckTimeout;
 	int32_t TcpConnectTimeout;
-
 } ConnectOptions;
 
 #ifdef __cplusplus
@@ -49,6 +46,21 @@ extern "C"
 	__declspec(dllexport)
 #endif
 	DWORD RdpStop(HANDLE dataPrt);
+
+#ifdef _WIN32
+	__declspec(dllexport)
+#endif
+	BOOL RdpSendKeyboardEvent(HANDLE wcontextPtr, UINT16 flags, UINT8 code);
+
+#ifdef _WIN32
+	__declspec(dllexport)
+#endif
+	BOOL RdpSendMouseEvent(HANDLE wcontextPtr, UINT16 flags, UINT16 x, UINT16 y);
+
+#ifdef _WIN32
+	__declspec(dllexport)
+#endif
+	VOID SetPaintEnabled(HANDLE wcontextPtr, BOOL enabled);
 
 #ifdef __cplusplus
 }

@@ -12,6 +12,7 @@ typedef struct
 	pOnImageUpdated OnImageUpdatedPtr;
 	pOnStopped OnStoppedPtr;
 	HANDLE transportStopEvent;
+	BOOL isPaintEnabled;
 } wrapper_context;
 
 static void on_stopped(wrapper_context* wcontext)
@@ -101,11 +102,17 @@ static BOOL on_end_paint(rdpContext* context)
 	WINPR_ASSERT(context);
 	WINPR_ASSERT(context->instance);
 
-	const pOnImageUpdated callback = ((wrapper_context*)context)->OnImageUpdatedPtr;
+	const wrapper_context* wcontext = (wrapper_context*)context;
 
+	if (!wcontext->isPaintEnabled)
+	{
+		return TRUE;
+	}
+
+	const pOnImageUpdated callback = wcontext->OnImageUpdatedPtr;
 	if (callback == NULL)
 	{
-		return FALSE;
+		return TRUE;
 	}
 
 	rdpGdi* gdi = context->gdi;
@@ -217,16 +224,12 @@ static void prepare_rdp_context(rdpContext* context, const ConnectOptions* rdpOp
     freerdp_settings_set_uint32(context->settings, FreeRDP_ProxyType, PROXY_TYPE_IGNORE);
     freerdp_settings_set_bool(context->settings, FreeRDP_LocalConnection, TRUE);
     freerdp_settings_set_bool(context->settings, FreeRDP_IgnoreCertificate, TRUE);
-	
+
 	freerdp_settings_set_bool(context->settings, FreeRDP_AutoReconnectionEnabled, rdpOptions->AutoReconnectionEnabled);
-	
+
 	freerdp_settings_set_uint32(context->settings, FreeRDP_AutoReconnectMaxRetries, rdpOptions->AutoReconnectMaxRetries);
 	freerdp_settings_set_uint32(context->settings, FreeRDP_TcpAckTimeout, rdpOptions->TcpAckTimeout);
 	freerdp_settings_set_uint32(context->settings, FreeRDP_TcpConnectTimeout, rdpOptions->TcpConnectTimeout);
-	
-
-
-
 
 	if (rdpOptions->Width > 0)
 	{
@@ -427,4 +430,37 @@ DWORD RdpStop(HANDLE wcontextPtr)
 	}
 
 	return result;
+}
+
+BOOL RdpSendKeyboardEvent(const HANDLE wcontextPtr, const UINT16 flags, const UINT8 code)
+{
+	const wrapper_context* wcontext = wcontextPtr;
+	if (wcontext->OnStoppedPtr == NULL)
+	{
+		return FALSE;
+	}
+
+	return freerdp_input_send_keyboard_event(wcontext->context.input, flags, code);
+}
+
+BOOL RdpSendMouseEvent(const HANDLE wcontextPtr, const UINT16 flags, const UINT16 x, const UINT16 y)
+{
+	const wrapper_context* wcontext = wcontextPtr;
+	if (wcontext->OnStoppedPtr == NULL)
+	{
+		return FALSE;
+	}
+
+	return freerdp_input_send_mouse_event(wcontext->context.input, flags, x, y);
+}
+
+VOID SetPaintEnabled(const HANDLE wcontextPtr, const BOOL enabled)
+{
+	wrapper_context* wcontext = wcontextPtr;
+	if (wcontext->OnStoppedPtr == NULL)
+	{
+		return;
+	}
+
+	wcontext->isPaintEnabled = enabled;
 }
