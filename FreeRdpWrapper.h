@@ -62,6 +62,11 @@ extern "C"
 #endif
 	VOID SetPaintEnabled(HANDLE wcontextPtr, BOOL enabled);
 
+#ifdef _WIN32
+	__declspec(dllexport)
+#endif
+	BOOL RdpRefreshDesktop(HANDLE wcontextPtr);
+
 #ifdef __cplusplus
 }
 #endif
