@@ -464,3 +464,23 @@ VOID SetPaintEnabled(const HANDLE wcontextPtr, const BOOL enabled)
 
 	wcontext->isPaintEnabled = enabled;
 }
+
+BOOL RdpRefreshDesktop(const HANDLE wcontextPtr)
+{
+	wrapper_context* wcontext = wcontextPtr;
+
+	if (wcontext->context.update->RefreshRect == NULL)
+	{
+		WLog_ERR(TAG, "No RefreshRect in update struct");
+		return FALSE;
+	}
+
+	const RECTANGLE_16 desktop = {
+		0, // left
+		0, // top
+		(UINT16)wcontext->context.settings->DesktopWidth, // right
+		(UINT16)wcontext->context.settings->DesktopHeight // bottom
+	};
+
+	return wcontext->context.update->RefreshRect(&wcontext->context, 1, &desktop);
+}
